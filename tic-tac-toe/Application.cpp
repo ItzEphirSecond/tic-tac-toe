@@ -30,6 +30,12 @@ void Application::Menu()
 	{
 		std::cout << "Выберете, за кого будете играть (1 - крестики, 0 - нолиики):" << std::endl;
 		std::cin >> crest;
+		if (!(crest == 1 || crest == 2))
+		{
+			std::cout << "Exiting...";
+			stopped = true;
+			return;
+		}
 		firstly = true;
 	}
 	else
@@ -106,7 +112,9 @@ void Application::Game()
 		gameNull();
 		break;
 	default:
-		break;
+		std::cout << "Error";
+		stopped = true;
+		return;
 	}
 
 	bool who = false;
@@ -167,6 +175,15 @@ void Application::gameCrest()
 void Application::gameNull()
 {
 	calculate();
+	bool who = false;
+	if (isWinner(who))
+	{
+		drawField();
+		std::string winner = (who ? "Крестики" : "Нолики");
+		std::cout << "Выиграли:" << winner << std::endl;
+		screen = 0;
+		return;
+	}
 	drawField();
 	std::cout << "Выберете, куда хотите пойти" << std::endl;
 	int answer;
