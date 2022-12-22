@@ -1,12 +1,17 @@
 #include "Application.h"
 
+// исполнительный
+
+// конструктор
 Application::Application()
 {
 	
 }
 
+// обновление
 void Application::Update()
 {
+	// посмотреть поле screen
 	switch (screen)
 	{
 	case 0:
@@ -21,12 +26,14 @@ void Application::Update()
 	}
 }
 
+// спрашивать, кем хочет ходить игрок
 void Application::Menu()
 {
+	// перегенерировать рандом
 	srand(time(0));
-	turn = 0;
-	draw = false;
-	if (!firstly)
+	turn = 0; // это первый ход
+	draw = false; // сейчас точно не ничья
+	if (!firstly) // спрашиваем, если первый раз запустили программу
 	{
 		std::cout << "Выберете, за кого будете играть (1 - крестики, 0 - нолиики):" << std::endl;
 		std::cin >> crest;
@@ -38,13 +45,14 @@ void Application::Menu()
 		}
 		firstly = true;
 	}
-	else
+	else // если не первый
 	{
 		std::cout << "Вы начинаете новую игру, продолжить (y - да)?";
 		std::string answer;
 		std::cin >> answer;
 		if (answer == "y")
 		{
+			// рандом ход
 			crest = rand() % 2;
 			for (int i = 0; i < 9; i++)
 			{
@@ -60,14 +68,16 @@ void Application::Menu()
 	screen = 1;
 }
 
+// цикл игры
 void Application::Game()
 {
+	// нарисовать поле
 	drawField();
-	std::cout << "Turn: " << turn << std::endl;
+	std::cout << "Turn: " << turn << std::endl; // вывести ход
 	switch (crest)
 	{
-	case true:
-		if (turn == 5)
+	case true: // если игрок ходит крестиками
+		if (turn == 5) // если пятый ход (ничейная позиция)
 		{
 			drawField();
 			bool who = false;
@@ -88,8 +98,8 @@ void Application::Game()
 		}
 		gameCrest();
 		break;
-	case false:
-		if (turn == 4)
+	case false // если игрок ходит ноликами
+		if (turn == 4) // если 4 ход (ничейная позиция)
 		{
 			calculate();
 			drawField();
@@ -119,6 +129,7 @@ void Application::Game()
 
 	bool who = false;
 
+	// проверяем, выиграл ли кто-нить
 	if (isWinner(who))
 	{
 		drawField();
@@ -130,61 +141,20 @@ void Application::Game()
 	turn++;
 }
 
+// игра для крестиков
 void Application::gameCrest()
 {
 	std::cout << "Выберете, куда хотите пойти" << std::endl;
-	int answer;
-	std::cin >> answer;
-	switch (answer)
-	{
-	case 1:
-		if (field[6] == 0) field[6] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 2:
-		if(field[7] == 0) field[7] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 3:
-		if (field[8] == 0)field[8] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 4:
-		if (field[3] == 0) field[3] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 5:
-		if (field[4] == 0) field[4] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 6:
-		if (field[5] == 0) field[5] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 7:
-		if (field[0] == 0) field[0] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 8:
-		if (field[1] == 0) field[1] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	case 9:
-		if (field[2] == 0) field[2] = 2;
-		else std::cout << "Поле занято, выберете другое: " << std::endl;
-		break;
-	default:
-		std::cout << "Exiting...";
-		stopped = true;
-		return;
-	}
-	calculate();
+	ask(2); // спрашиваем, куда хотим пойти
+	calculate(); // просчитываем ход компьютера
 }
 
+// игра для ноликов
 void Application::gameNull()
 {
-	calculate();
-	bool who = false;
+	calculate(); // просчитываем ход компьютера
+	bool who = false; 
+	// проверяем, выиграл ли он
 	if (isWinner(who))
 	{
 		drawField();
@@ -193,45 +163,10 @@ void Application::gameNull()
 		screen = 0;
 		return;
 	}
-	drawField();
-	std::cout << "Выберете, куда хотите пойти" << std::endl;
-	int answer;
-	std::cin >> answer;
+	drawField(); // рисуем поле
 	
-	switch (answer)
-	{
-	case 1:
-		field[6] = 1;
-		break;
-	case 2: 
-		field[7] = 1;
-		break;
-	case 3:
-		field[8] = 1;
-		break;
-	case 4:
-		field[3] = 1;
-		break;
-	case 5:
-		field[4] = 1;
-		break;
-	case 6:
-		field[5] = 1;
-		break;
-	case 7:
-		field[0] = 1;
-		break;
-	case 8:
-		field[1] = 1;
-		break;
-	case 9:
-		field[2] = 1;
-		break;
-	default:
-		std::cout << "Exiting...";
-		stopped = true;
-		return;
-	}
+	std::cout << "Выберете, куда хотите пойти" << std::endl;
+	ask(1); // спрашиваем, куда хотим пойти
 }
 
 #pragma region Do not use this, omg, this is so bad code that I cant understand why i am doing this
@@ -239,23 +174,24 @@ void Application::gameNull()
 // this is very bad code, dont open it
 void Application::calculate()
 {
+	// смотрим, какой сейчас ход
 	switch (turn)
 	{
-	case 0:
-		if (crest)
+	case 0: // первый ход
+		if (crest) // если крестиками ходит игрок
 		{
 			if (field[4] == 0)
 			{
-				field[4] = 1;
+				field[4] = 1; // занимаем центр
 			}
 			else
 			{
-				field[0] = 1;
+				field[0] = 1; // занимаем верхний левый угол
 			}
 		}
-		else
+		else // если крестиками ходит компьютер
 		{
-			field[4] = 2;
+			field[4] = 2; // занимаем центр
 		}
 		break;
 	case 1:
@@ -263,6 +199,7 @@ void Application::calculate()
 		{
 			bool who;
 			int wheree;
+			// проверяем, есть ли кака-то опасность, ставим в свободную клетку
 			if (isDanger(who, wheree))
 			{
 				switch (wheree)
@@ -311,9 +248,10 @@ void Application::calculate()
 			}
 			else
 			{
-				if (field[8] == 2 && field[4] == 2) field[6] = 1;
+				if (field[8] == 2 && field[4] == 2) field[6] = 1; // самая неприятная позиция, если 2 в большой диагонали и мы в верхнем левом углу
 				else
 				{
+					// взависимости от того, какой угол мы заняли, ходим
 					if (field[0] == 2)
 					{
 						if (field[8] == 2 || field[5] == 2) field[7] = 1;
@@ -355,6 +293,7 @@ void Application::calculate()
 		}
 		else
 		{
+			// я уже не помню, что делает этот код, но по-моему он ставит в противоположный угол от хода игрока
 			if (field[0] == 1 || field[1] == 1 || field[3] == 1) field[8] = 2;
 			else if (field[6] == 1 || field[7] == 1) field[2] = 2;
 			else if (field[8] == 1 || field[5] == 1) field[0] = 2;
@@ -366,6 +305,7 @@ void Application::calculate()
 		{
 			bool who;
 			int wheree;
+			// проверяем опасные позиции
 			if (isDanger(who, wheree))
 			{
 				switch (wheree)
@@ -414,6 +354,7 @@ void Application::calculate()
 			}
 			else
 			{
+				// ходим на рандом
 				if (field[0] == 0) field[0] = 1;
 				elif(field[1] == 0) field[1] = 1;
 				elif(field[2] == 0) field[2] = 1;
@@ -429,6 +370,7 @@ void Application::calculate()
 		{
 			bool who;
 			int wheree;
+			// проверяем опасные ситуации
 			if (isDanger(who, wheree))
 			{
 				switch (wheree)
@@ -477,6 +419,7 @@ void Application::calculate()
 			}
 			else
 			{
+				// взависимости от того, какой угол мы заняли, ходим
 				if (field[8] == 2)
 				{
 					if (field[7] == 1) field[5] = 2;
@@ -495,11 +438,12 @@ void Application::calculate()
 				elif(field[6] == 2)
 				{
 					if (field[3] == 1) field[7] = 2;
-					elif(field[7] == 2) field[3] = 2;
+					elif(field[7] == 1) field[3] = 2;
 				}
 			}
 		}
 		break;
+	// далее мы просто проверяем, есть ли опасные позиции, иначе ставим на рандом, можно объединить в одну функцию, но мне лень
 	case 3:
 		if (crest)
 		{
