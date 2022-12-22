@@ -30,7 +30,7 @@ void Application::Menu()
 	{
 		std::cout << "Выберете, за кого будете играть (1 - крестики, 0 - нолиики):" << std::endl;
 		std::cin >> crest;
-		if (!(crest == 1 || crest == 2))
+		if (!(crest == 0 || crest == 1))
 		{
 			std::cout << "Exiting...";
 			stopped = true;
@@ -138,31 +138,40 @@ void Application::gameCrest()
 	switch (answer)
 	{
 	case 1:
-		field[6] = 2;
+		if (field[6] == 0) field[6] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 2:
-		field[7] = 2;
+		if(field[7] == 0) field[7] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 3:
-		field[8] = 2;
+		if (field[8] == 0)field[8] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 4:
-		field[3] = 2;
+		if (field[3] == 0) field[3] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 5:
-		field[4] = 2;
+		if (field[4] == 0) field[4] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 6:
-		field[5] = 2;
+		if (field[5] == 0) field[5] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 7:
-		field[0] = 2;
+		if (field[0] == 0) field[0] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 8:
-		field[1] = 2;
+		if (field[1] == 0) field[1] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	case 9:
-		field[2] = 2;
+		if (field[2] == 0) field[2] = 2;
+		else std::cout << "Поле занято, выберете другое: " << std::endl;
 		break;
 	default:
 		std::cout << "Exiting...";
@@ -225,6 +234,9 @@ void Application::gameNull()
 	}
 }
 
+#pragma region Do not use this, omg, this is so bad code that I cant understand why i am doing this
+
+// this is very bad code, dont open it
 void Application::calculate()
 {
 	switch (turn)
@@ -874,3 +886,5 @@ void Application::calculate()
 		break;
 	}
 }
+
+#pragma endregion
